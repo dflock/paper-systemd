@@ -1,14 +1,17 @@
 [Unit]
 Description=Minecraft Server
+After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/minecraft/paper
-EnvironmentFile=/home/minecraft/paper/minecraft_java.env
-ExecStart=java $JAVA_OPTS -jar /home/minecraft/paper/server.jar nogui
-ExecStop=echo "stop" > /run/minecraft.stdin
+WorkingDirectory=/home/minecraft/papermc
+EnvironmentFile=/home/minecraft/papermc/minecraft_java.env
+ExecStart=java $JAVA_OPTS -jar /home/minecraft/papermc/server.jar nogui
+ExecStop=/bin/sh -c 'echo stop > /run/minecraft.stdin'
 User=minecraft
 Restart=on-failure
+RestartSec=5
+TimeoutStopSec=120
 Sockets=minecraft.socket
 StandardInput=socket
 StandardOutput=journal

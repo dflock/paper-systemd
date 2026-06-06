@@ -17,12 +17,12 @@ sudo passwd minecraft
 Log into the minecraft service account.  Download __Paper__ server from:
 <https://papermc.io/software/paper>
 
-Place the server in `/home/minecraft/paper` then rename the __Paper__ server executable file to `server.jar`.
+Place the server in `/home/minecraft/papermc` then rename the __Paper__ server executable file to `server.jar`.
 
 Using the commands below, replacing for the correct download URL and filename:
 ```
-mkdir paper
-cd paper
+mkdir papermc
+cd papermc
 wget https://api.papermc.io/v2/projects/paper/GETLATESTFROMWEBSITE
 mv paper-x.xx.x-xxx.jar server.jar
 ```
@@ -45,16 +45,23 @@ git clone https://github.com/AtomicSponge/paper-systemd.git
 cd paper-systemd
 ```
 
-Create link of file `minecraft-console.py` in `/usr/local/bin` and make sure it has execute permissions by running:
+Make the scripts executable and symlink them into `/usr/local/bin`:
 ```
-chmod 555 minecraft-console.py
-sudo ln minecraft-console.py /usr/local/bin
+chmod 555 minecraft-console.py minecraft
+sudo ln -s "$(pwd)/minecraft-console.py" /usr/local/bin/minecraft-console
+sudo ln -s "$(pwd)/minecraft" /usr/local/bin/minecraft
+```
+
+Copy the Java options file to the server directory:
+```
+cp minecraft_java.env /home/minecraft/papermc/minecraft_java.env
 ```
 
 Place files `minecraft.service` and `minecraft.socket` in `/etc/systemd/system`:
 ```
-sudo mv minecraft.service /etc/systemd/system
-sudo mv minecraft.socket /etc/systemd/system
+sudo cp minecraft.service /etc/systemd/system
+sudo cp minecraft.socket /etc/systemd/system
+sudo systemctl daemon-reload
 ```
 
 Then to start the service run:
