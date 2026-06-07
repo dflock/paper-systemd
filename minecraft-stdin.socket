@@ -3,3 +3,6 @@ PartOf=minecraft.service
 
 [Socket]
 ListenFIFO=%t/minecraft.stdin
+SocketMode=0660
+SocketUser=minecraft
+SocketGroup=minecraft

@@ -33,7 +33,7 @@ Run:
 ```
 java -Xms4G -Xmx4G -jar server.jar --nogui
 ```
-And follow the on screen prompts.
+On the first run the server writes an `eula.txt` file (with `eula=false`) and exits immediately. Open `eula.txt`, change the line to `eula=true` to accept the [Minecraft EULA](https://aka.ms/MinecraftEULA), then start the server again to generate the world and `server.properties`.
 
 ## Configure scripts
 
@@ -67,6 +67,11 @@ sudo systemctl daemon-reload
 Then to start the service run:
 ```
 sudo systemctl enable --now minecraft
+```
+
+The command socket (`/run/minecraft.stdin`) is restricted to the `minecraft` user and group so that other local users can't inject server commands. To run the `minecraft` and `minecraft-console` commands from your own account, add it to the `minecraft` group (log out and back in for it to take effect):
+```
+sudo usermod -aG minecraft "$USER"
 ```
 
 ## Memory Setting

@@ -3,7 +3,7 @@ Description=Minecraft Server
 After=network.target
 
 [Service]
-Type=simple
+Type=exec
 WorkingDirectory=/home/minecraft/papermc
 EnvironmentFile=/home/minecraft/papermc/minecraft_java.env
 ExecStart=java $JAVA_OPTS -jar /home/minecraft/papermc/server.jar nogui
@@ -16,3 +16,15 @@ Sockets=minecraft-stdin.socket
 StandardInput=socket
 StandardOutput=journal
 StandardError=journal
+
+# Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/home/minecraft/papermc
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target
