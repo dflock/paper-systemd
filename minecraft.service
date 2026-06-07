@@ -16,5 +16,3 @@ Sockets=minecraft-stdin.socket
 StandardInput=socket
 StandardOutput=journal
 StandardError=journal
-
-[Install]
