@@ -57,16 +57,16 @@ Copy the Java options file to the server directory:
 cp minecraft_java.env /home/minecraft/papermc/minecraft_java.env
 ```
 
-Place files `minecraft.service` and `minecraft.socket` in `/etc/systemd/system`:
+Place files `minecraft.service` and `minecraft-stdin.socket` in `/etc/systemd/system`:
 ```
 sudo cp minecraft.service /etc/systemd/system
-sudo cp minecraft.socket /etc/systemd/system
+sudo cp minecraft-stdin.socket /etc/systemd/system
 sudo systemctl daemon-reload
 ```
 
 Then to start the service run:
 ```
-sudo systemctl enable minecraft
+sudo systemctl enable --now minecraft
 ```
 
 ## Memory Setting
@@ -94,6 +94,47 @@ For example, this will monitor the log:
 ```
 journalctl -u minecraft -f
 ```
+
+-----
+
+## Socket Activation (on-demand startup)
+
+`socket-activate` is a TCP proxy that starts `minecraft.service` the moment a player connects and can stop it automatically after a period of inactivity. With this setup, PaperMC doesn't need to run 24/7.
+
+### Install socket-activate
+
+Available on the AUR as `socket-activate`, or build from source:
+<https://github.com/cherti/socket-activate>
+
+### Configure PaperMC to bind on localhost only
+
+In `server.properties`, set:
+```
+server-ip=127.0.0.1
+```
+
+This is required because `socket-activate` will own the public port (25565). If PaperMC also tries to bind on all interfaces, the two will conflict.
+
+### Install and enable the socket activation units
+
+Copy the two new unit files to `/etc/systemd/system`:
+```
+sudo cp socket-activate-minecraft.socket /etc/systemd/system
+sudo cp socket-activate-minecraft.service /etc/systemd/system
+sudo systemctl daemon-reload
+```
+
+Disable the server from starting at boot (it will now start on demand), then enable the proxy socket:
+```
+sudo systemctl disable minecraft
+sudo systemctl enable --now socket-activate-minecraft.socket
+```
+
+### Caveats
+
+**Startup latency:** PaperMC takes 30–60 seconds to start. The first connection attempt may fail or time out while it initialises; subsequent connections work normally.
+
+**Inactivity timeout:** After no players have been connected for 15 minutes, PaperMC is stopped automatically. To change the timeout, edit the `-t` flag in `socket-activate-minecraft.service`. To disable automatic shutdown, remove the `-t` option entirely.
 
 -----
 

@@ -1,0 +1,7 @@
+[Unit]
+Description=Socket activation proxy for minecraft.service
+Requires=socket-activate-minecraft.socket
+
+[Service]
+ExecStart=/usr/bin/socket-activate -u minecraft.service -a "127.0.0.1:25565" -t 15m
+NonBlocking=true

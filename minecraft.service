@@ -12,10 +12,9 @@ User=minecraft
 Restart=on-failure
 RestartSec=5
 TimeoutStopSec=120
-Sockets=minecraft.socket
+Sockets=minecraft-stdin.socket
 StandardInput=socket
 StandardOutput=journal
 StandardError=journal
 
 [Install]
-WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=Socket activation for minecraft.service
+
+[Socket]
+ListenStream=0.0.0.0:25565
+NoDelay=true
+
+[Install]
+WantedBy=multi-user.target
